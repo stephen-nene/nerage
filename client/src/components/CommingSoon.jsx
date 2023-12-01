@@ -24,7 +24,7 @@ export default function CommingSoon() {
                 />
                 <h1 className="text-4xl font-semibold mb-4"> Page Comming-Soon</h1>
                 <p className="text-lg mb-6">
-                    The page you're looking foris in test mode.
+                    The page you're looking for is in the works. Please check back soon!
                 </p>
                 <button
                     className={`bg-gradient-to-r from-rose-900 to-rose-500 hover:from-rose-600 hover:to-rose-700 text-white py-2 px-4 rounded-lg transition-colors duration-300 ease-in-out ${darkMode

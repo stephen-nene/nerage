@@ -17,7 +17,7 @@ import "./assets/styles/App.css";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
-  const [image, setImage] = useState("");
+  const [darkMode, setDarkMode] = useState(true);
 
   // New function to get image path from the backend
   const getImagePath = async (link) => {
@@ -45,7 +45,7 @@ function App() {
 
   return (
     <>
-      <Navbar />
+      <Navbar darkMode={darkMode} setDarkMode={setDarkMode}/>
       <div className="">
         <Routes>
           <Route path="/" element={<Home/>} />

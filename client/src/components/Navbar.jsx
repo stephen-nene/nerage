@@ -6,8 +6,7 @@ import { GrMenu, GrClose } from "react-icons/gr";
 
 import "../assets/styles/navbar.css";
 
-export default function Navbar({ props }) {
-  const [darkMode, setDarkMode] = useState(false);
+export default function Navbar({darkMode, setDarkMode }) {
   const [toggleMenu, setToggleMenu] = useState(false);
   const navigationRef = useRef(null);
 
@@ -73,7 +72,7 @@ export default function Navbar({ props }) {
               {darkMode ? (
                 <button
                   onClick={() => {
-                    dispatch(setDarkMode());
+                    setDarkMode(!darkMode);
                   }}
                   className=" bg-rose-100 cursorpointer"
                 >
@@ -81,9 +80,9 @@ export default function Navbar({ props }) {
                 </button>
               ) : (
                 <button
-                  onClick={() => {
-                    dispatch(setDarkMode());
-                  }}
+                onClick={() => {
+                  setDarkMode(!darkMode);
+                }}
                   className="bg-black cursor-pointer"
                 >
                   <BsMoonStarsFill className="" />
