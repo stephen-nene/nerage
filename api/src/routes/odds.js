@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const puppeteer = require('puppeteer');
+
 const path = require('path');
 const fs = require('fs');
 
@@ -12,7 +13,7 @@ router.get('/betika', async (req, res) => {
     // Launch a headless browser
     console.log('🚀 Launching a headless browser...');
     const browser = await puppeteer.launch({
-      headless: false
+      headless: 'new'
     });
     const page = await browser.newPage();
 
@@ -61,6 +62,17 @@ router.get('/betika', async (req, res) => {
       return formattedOdds;
     });
 
+    // Save the odds to a CSV file
+    const timestamp = new Date().toISOString().replace(/[-:.]/g, '');
+    const filename = `betika_${timestamp}.csv`;
+    const filePath = path.join(__dirname, '..', 'db', filename);
+
+
+    // Write CSV content
+    const csvContent = odds.map((match) => `${match.teams.home},${match.teams.away},${match['1']},${match['x']},${match['2']}`).join('\n');
+    fs.writeFileSync(filePath, `Home,Away,1,X,2\n${csvContent}`, 'utf-8');
+
+
     // Close the browser
     console.log('🔒 Closing the browser...');
     await browser.close();
@@ -74,5 +86,12 @@ router.get('/betika', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+router.get('/sportpesa', async (req, res) => {
+
+})
+router.get('/sportpesa', async (req, res) => {
+
+})
 
 module.exports = router;
