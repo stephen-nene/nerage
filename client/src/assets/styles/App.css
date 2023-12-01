@@ -6,11 +6,7 @@
   filter: drop-shadow(0 0 2em #61dafb);
 }
 
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
+
 
 .row {
   display: flex;
@@ -36,24 +32,14 @@ form {
   display: flex;
   gap: 10px;
   margin-top: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 #greet-input {
-  flex: 1;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
 
-button {
-  padding: 10px;
-  background-color: #4caf50; /* Green background color */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
 
-button:hover {
-  background-color: #45a049; /* Dark green background color on hover */
-}

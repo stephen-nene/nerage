@@ -1,7 +1,7 @@
 // Modal.js
 
 import React from 'react';
-import '../assets/css/ConfirmImg.css';
+import '../../assets/styles/ConfirmImg.css';
 
 const ConfirmImg = ({ isOpen, closeModal,image }) => {
   if (!isOpen) {

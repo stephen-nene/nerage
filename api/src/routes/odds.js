@@ -5,18 +5,11 @@ const path = require('path');
 const fs = require('fs');
 
 // Define the route
-router.post('/screenshot', async (req, res) => {
+router.post('/betika', async (req, res) => {
   const { url } = req.body;
 
   if (!url) {
     return res.status(400).json({ error: 'Missing URL in the request body' });
-  }
-  // Regular expression to validate a URL format
-  const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-
-  // Check if the URL is in the correct format
-  if (!urlRegex.test(url)) {
-    return res.status(400).json({ error: 'Invalid URL format. Please provide a valid URL starting with http:// or https://' });
   }
 
   try {
@@ -52,7 +45,7 @@ router.post('/screenshot', async (req, res) => {
     // console.log(`🖼️ Saving screenshot at: ${screenshotPath}`);
 
     // Take a screenshot
-    await page.screenshot({ fullPage: false, path: screenshotPath });
+    await page.screenshot({ fullPage: false ,path: screenshotPath });
 
     // Close the browser
     console.log('🔒 Closing the browser...');
