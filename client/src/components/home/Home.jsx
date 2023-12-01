@@ -39,7 +39,7 @@ function Home() {
   };
 
   return (
-    <div className="text-center flex flex-col justify-center mt-5">
+    <div className="conatiner text-center flex flex-col justify-center mt-5">
       <h1>Nerag'e! </h1>
       <h2>The ultimate web scrapping tool</h2>
 

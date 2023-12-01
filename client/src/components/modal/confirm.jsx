@@ -2,30 +2,36 @@
 
 import React from 'react';
 import '../../assets/styles/ConfirmImg.css';
+import { message } from 'antd';
 
 const ConfirmImg = ({ isOpen, closeModal,image }) => {
   if (!isOpen) {
     return null;
   }
 
+  function HandleNo() {
+    message.error('informed admins about the error')
+    setTimeout(() => {
+     closeModal()
+    },4000)
+  }
+
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2>Is this your Sites image ?</h2>
         <img src={image} alt="Modal Image" className="modal-image" />
+        {/* <p>image for{image}</p> */}
+        <h2 className='text-2xl mb-3 '>Is this your Sites image ?</h2>
 
         <div className="modal-buttons">
-          <button className="yes-button" >
+          <button onClick={closeModal} className="hover:bg-green-600 hover:text-white yes-button" >
             Yes
           </button>
-          <button className="no-button" >
+          <button  className="hover:bg-red-600 hover:text-white no-button"  onClick={HandleNo}  >
             No
           </button>
         </div>
 
-        <button className="close-button" onClick={closeModal}>
-          Close
-        </button>
       </div>
     </div>
   );

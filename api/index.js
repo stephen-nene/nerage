@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Import the cors middleware
 const screenshotRoute = require('./src/routes/screenshot');
+const odds = require('./src/routes/odds');
 const path = require('path');
 
 const app = express();
@@ -17,7 +18,7 @@ app.use('/images', express.static(path.join(__dirname, 'src/assets')));
 
 
 // Routes
-app.use('/api', screenshotRoute);
+app.use('/api', screenshotRoute,odds);
 
 // Start the server
 const port = process.env.PORT || 3000;

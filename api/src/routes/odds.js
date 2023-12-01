@@ -5,18 +5,14 @@ const path = require('path');
 const fs = require('fs');
 
 // Define the route
-router.post('/betika', async (req, res) => {
-  const { url } = req.body;
-
-  if (!url) {
-    return res.status(400).json({ error: 'Missing URL in the request body' });
-  }
+router.get('/betika', async (req, res) => {
+  const url = 'https://www.betika.com';
 
   try {
     // Launch a headless browser
     console.log('🚀 Launching a headless browser...');
     const browser = await puppeteer.launch({
-      headless: 'new'
+      headless: false
     });
     const page = await browser.newPage();
 
@@ -24,39 +20,57 @@ router.post('/betika', async (req, res) => {
     console.log(`🌐 Navigating to: ${url}`);
     await page.goto(url);
 
-    // Get the website title
-    const title = await page.title();
-    // console.log(`📚 Website title: ${title}`);
+    // Click the "No Thanks" button
+    console.log('⌛ Waiting for "No Thanks" button...');
+    await page.waitForSelector('.app-promo-cta__container__actions__btn.light');
+    await page.click('.app-promo-cta__container__actions__btn.light');
+    console.log('✅ Clicked "No Thanks" button.');
 
-    // Generate a timestamp for naming the screenshot
-    const timestamp = new Date().toISOString().replace(/:/g, '-').replace(/\./g, '-');
-    // console.log(`🕰️ Generating timestamp: ${timestamp}`);
+    // Wait for the odds container to load
+    console.log('⌛ Waiting for odds container...');
+    await page.waitForSelector('.prebet-match');
+    console.log('✅ Odds container loaded.');
 
-    // Create a folder to store screenshots if it doesn't exist
-    const screenshotsFolder = path.join(__dirname, '../assets/screenshots');
-    if (!fs.existsSync(screenshotsFolder)) {
-      console.log('📁 Creating screenshots folder...');
-      fs.mkdirSync(screenshotsFolder);
-    }
+    // Extract odds information for the first 10 games
+    const odds = await page.evaluate(() => {
+      const matches = document.querySelectorAll('.prebet-match');
+      const formattedOdds = [];
 
-    // Name the screenshot based on the title and timestamp
-    const imgUrl = `http://localhost:3000/images/screenshots/${title}_${timestamp}.png`
-    const screenshotPath = path.join(screenshotsFolder, `${title}_${timestamp}.png`);
-    // console.log(`🖼️ Saving screenshot at: ${screenshotPath}`);
+      for (let i = 0; i < 10; i++) {
+        const match = matches[i];
 
-    // Take a screenshot
-    await page.screenshot({ fullPage: false ,path: screenshotPath });
+        // Extract teams
+        const teamsContainer = match.querySelector('.prebet-match__teams');
+        const homeTeam = teamsContainer.querySelector('.prebet-match__teams__home').textContent.trim();
+        const awayTeam = teamsContainer.querySelector('.prebet-match__teams span:last-child').textContent.trim();
+
+        // Extract odds values
+        const oddsValues = Array.from(match.querySelectorAll('.prebet-match__odd__odd-value.bold')).map((odd) => odd.textContent.trim());
+
+        formattedOdds.push({
+          teams: {
+            home: homeTeam,
+            away: awayTeam,
+          },
+          '1': oddsValues[0],
+          'x': oddsValues[1],
+          '2': oddsValues[2],
+        });
+      }
+
+      return formattedOdds;
+    });
 
     // Close the browser
     console.log('🔒 Closing the browser...');
     await browser.close();
 
-    // Respond with the path to the saved screenshot
-    res.json({ success: true, imgUrl });
-    console.log(`🖼️ Screenshot accessible at: ${imgUrl}`);
-    // console.log('✅ Request processed successfully.');
+    // Send the formatted odds as JSON
+    res.json({ odds });
+
+    console.log('✅ Request processed successfully.');
   } catch (error) {
-    console.error('❌ Error capturing screenshot:', error);
+    console.error('❌ Error capturing odds:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
