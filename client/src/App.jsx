@@ -53,7 +53,7 @@ function App() {
           <Route path="/login" element={<CommingSoon/>} />
           <Route path="/contactus" element={<ContactUs/>} />
 
-          <Route path="/odds" element={<Odds/>} />
+          <Route path="/odds" element={<Odds darkMode={darkMode}/>} />
         </Routes>
 
 

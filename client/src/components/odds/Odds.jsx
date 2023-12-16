@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { handleGetBetika } from "../../fetch";
 
 // Use `animated` for animated components
 const animatedComponents = makeAnimated();
@@ -41,8 +42,9 @@ const options = [
   },
 ];
 
-export default function Odds() {
+export default function Odds({darkMode}) {
   const [selectedOption, setSelectedOption] = useState(null);
+  const [odds, setOdds] = useState("");
 
   const handleChange = (selected) => {
     setSelectedOption(selected);
@@ -50,6 +52,10 @@ export default function Odds() {
       console.log(selected.url);
     }
   };
+
+  if (!odds){
+    console.log(odds)
+  }
 
   return (
     <>
@@ -69,6 +75,41 @@ export default function Odds() {
             components={animatedComponents}
           />
         </div>
+        <div className="btn">
+          <button onClick={() => handleGetBetika(setOdds)}>Get</button>
+        </div>
+
+        <div className="mt-4">
+        {odds &&
+          odds.map((item, index) => (
+            <div
+              key={index}
+              className={`flex justify-between items-center p-3 border ${darkMode ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'}`}
+            >
+              <div>
+                <p>{item.teams.home}</p>
+                <p>{item.teams.away}</p>
+              </div>
+              <div className="flex items-center">
+                <p className="mr-2">Home: {item[1]}</p>
+                <p className="mr-2">Away: {item[2]}</p>
+                <p>X: {item.x}</p>
+              </div>
+            </div>
+          ))}
+      </div>
+
+        <div className="mt-6">
+        {odds && odds.map((odd, index) => (
+          <div key={index} className="bg-gray-200 p-4 my-2 rounded-md">
+            <h2 className="text-xl font-semibold">{odd.teams.home} vs {odd.teams.away}</h2>
+            <p>Home: {odd[1]}</p>
+            <p>Away: {odd[2]}</p>
+            <p>Draw: {odd.x}</p>
+          </div>
+        ))}
+      </div>
+
       </div>
     </>
   );

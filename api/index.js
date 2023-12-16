@@ -16,13 +16,13 @@ app.use(cors());
 // Serve images from the 'src/assets' directory
 app.use('/images', express.static(path.join(__dirname, 'src/assets')));
 
-
 // Routes
 app.use('/api', screenshotRoute,odds);
 
 // Start the server
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || 'localhost';
+
 app.listen(port, () => {
   console.log(`Server is running at http://${host}:${port}`);
 });

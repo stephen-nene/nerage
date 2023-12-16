@@ -8,12 +8,15 @@ const fs = require('fs');
 // Define the route
 router.get('/betika', async (req, res) => {
   const url = 'https://www.betika.com';
+  const userDataDir = path.join(__dirname, '../assets/user_dir');
 
   try {
     // Launch a headless browser
     console.log('🚀 Launching a headless browser...');
     const browser = await puppeteer.launch({
-      headless: 'new'
+      // headless: false
+      headless: 'new',
+      userDataDir: userDataDir, 
     });
     const page = await browser.newPage();
 
@@ -21,11 +24,19 @@ router.get('/betika', async (req, res) => {
     console.log(`🌐 Navigating to: ${url}`);
     await page.goto(url);
 
-    // Click the "No Thanks" button
-    console.log('⌛ Waiting for "No Thanks" button...');
-    await page.waitForSelector('.app-promo-cta__container__actions__btn.light');
-    await page.click('.app-promo-cta__container__actions__btn.light');
-    console.log('✅ Clicked "No Thanks" button.');
+
+    // Wait for the modal container to appear
+    console.log('⌛ Waiting for modal container...');
+    await page.waitForSelector('.modal__container');
+
+
+    // Click the "x" button
+    console.log('⌛ Waiting for "x" button...');
+    const xButton = await page.$('.modal__x');
+    if (!xButton) {
+      console.error('❌ "x" button not found.');
+      return;
+    }
 
     // Wait for the odds container to load
     console.log('⌛ Waiting for odds container...');
