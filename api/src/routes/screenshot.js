@@ -45,10 +45,12 @@ router.post('/screenshot', async (req, res) => {
       console.log('📁 Creating screenshots folder...');
       fs.mkdirSync(screenshotsFolder);
     }
+    
+   // Name the screenshot based on the title and timestamp
+   const imgFileName = `${title}_${timestamp}.png`;
+   const imgUrl = `http://localhost:3000/images/screenshots/${imgFileName}`;
+   const screenshotPath = path.join(screenshotsFolder, imgFileName);
 
-    // Name the screenshot based on the title and timestamp
-    const imgUrl = `http://localhost:3000/images/screenshots/${title}_${timestamp}.png`
-    const screenshotPath = path.join(screenshotsFolder, `${title}_${timestamp}.png`);
     // console.log(`🖼️ Saving screenshot at: ${screenshotPath}`);
 
     // Take a screenshot

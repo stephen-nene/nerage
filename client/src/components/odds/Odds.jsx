@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { Button, message } from "antd";
 import { handleGetBetika } from "../../fetch";
 
 // Use `animated` for animated components
 const animatedComponents = makeAnimated();
 
-const options = [
+const options1 = [
   {
     value: "unibet",
     label: "Unibet",
@@ -42,6 +43,9 @@ const options = [
   },
 ];
 
+const options = [
+]
+
 export default function Odds({darkMode}) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [odds, setOdds] = useState("");
@@ -53,20 +57,23 @@ export default function Odds({darkMode}) {
     }
   };
 
+  const removeSite = () => {
+    message.success("Site Removed");
+  }
+
   if (!odds){
     console.log(odds)
   }
 
   return (
     <>
-      <div className="text-center flex flex-col justify-center mt-5">
-        <h1 className="text-2xl font-bold">Odds</h1>
+      <div className="m-4 text-cente flex flex-col justify-cente mt-5">
         <p className="text-xl">!!!!! For educational purposes only !!!!!!</p>
-        <p className="text-xl">Select a betting site to view odds:</p>
-        <div className="w-64 mt-4 mx-auto">
-          <Select
-            className=" bg-gray-500 text-black"
-            options={options}
+        <div className=" m-4 gap-3">
+
+        <Select
+            className=" bg-gray-500 text-black w-48"
+            options={options1}
             isSearchable={true}
             isClearable={false}
             value={selectedOption}
@@ -74,6 +81,23 @@ export default function Odds({darkMode}) {
             onChange={handleChange}
             components={animatedComponents}
           />
+          <div className="selects flex my-4 gap-2">
+            <Button onClick={()=>removeSite()}>1</Button>
+            <Button>2</Button>
+            <Button>3</Button>
+            <Button>4</Button>
+          </div>
+
+          {/* <select name="select" id="">
+            <option value="">Select an option</option>
+            <option value="">Table-tennis</option>
+            <option value="">cricket</option>
+            <option value="">tennis</option>
+            <option value="">volleyball</option>
+            <option value="">darts</option>
+            <option value="">bowls</option>
+          </select> */}
+
         </div>
         <div className="btn">
           <button onClick={() => handleGetBetika(setOdds)}>Get</button>
