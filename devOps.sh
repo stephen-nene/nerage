@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Check if the current directory is a Git repository
+if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+    echo "Error: The current directory is not a Git repository."
+    exit 1
+fi
+
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    echo "Usage: git-wizard [commit-message]"
+    echo "Runs a Git commit wizard in the current repository."
+    exit 0
+fi
+
+
 # Array of styles
 figletstyles=("banner" "big" "block" "bubble" "digital" "ivrit" "lean" "mini" "mnemonic" "script" "shadow" "slant" "small" "smscript" "smshadow" "smslant" "standard" "term")
 cowsaystyles=("apt" "bud-frogs" "bunny" "calvin" "cheese" "cock" "cower" "daemon" "default" "dragon" "dragon-and-cow" "duck" "elephant" "elephant-in-snake" "eyes" "flaming-sheep" "fox" "ghostbusters" "gnu" "hellokitty" "kangaroo" "kiss" "koala" "kosh" "luke-koala" "mech-and-cow" "milk" "moofasa" "moose" "pony" "pony-smaller" "ren" "sheep" "skeleton" "snowman" "stegosaurus" "stimpy" "suse" "three-eyes" "turkey" "turtle" "tux" "unipony" "unipony-smaller" "vader" "vader-koala" "www")
@@ -41,6 +54,8 @@ elif command_exists fortune; then
 else
     echo "No fortune available, skipping..."
 fi
+
+
 
 # Commit message handling
 commitMessage=""
