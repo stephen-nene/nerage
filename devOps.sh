@@ -5,57 +5,65 @@ figletstyles=("banner" "big" "block" "bubble" "digital" "ivrit" "lean" "mini" "m
 cowsaystyles=("apt" "bud-frogs" "bunny" "calvin" "cheese" "cock" "cower" "daemon" "default" "dragon" "dragon-and-cow" "duck" "elephant" "elephant-in-snake" "eyes" "flaming-sheep" "fox" "ghostbusters" "gnu" "hellokitty" "kangaroo" "kiss" "koala" "kosh" "luke-koala" "mech-and-cow" "milk" "moofasa" "moose" "pony" "pony-smaller" "ren" "sheep" "skeleton" "snowman" "stegosaurus" "stimpy" "suse" "three-eyes" "turkey" "turtle" "tux" "unipony" "unipony-smaller" "vader" "vader-koala" "www")
 toiletfilters=("crop" "gay" "metal" "flip" "flop" "180" "left" "right" "border")
 
-# Randomly select styles
-random_figlet_style=${figletstyles[$RANDOM % ${#figletstyles[@]}]}
-random_cowsay_style=${cowsaystyles[$RANDOM % ${#cowsaystyles[@]}]}
-random_toilet_filter=${toiletfilters[$RANDOM % ${#toiletfilters[@]}]}
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" &>/dev/null
+}
 
-# Display Git'er Wizard message with a random style
-if ((RANDOM % 2 == 0)); then
-    figlet -f "$random_figlet_style" "Git'er Wizard"
-else
-    toilet -f big -F "$random_toilet_filter" "Git'er Wizard"
+# Function to show styled message
+show_random_style() {
+    local text="$1"
+    if command_exists figlet; then
+        figlet -f "${figletstyles[RANDOM % ${#figletstyles[@]}]}" "$text"
+    elif command_exists toilet; then
+        toilet -f big -F "${toiletfilters[RANDOM % ${#toiletfilters[@]}]}" "$text"
+    else
+        echo "$text"
+    fi
+}
+
+# Main script logic
+
+# Check for Git
+if ! command_exists git; then
+    echo "Error: Git is not installed. Please install Git and try again."
+    exit 1
 fi
 
-# Display a fortune inside a message with a random animal using Cowsay
-fortune | cowsay -f "$random_cowsay_style"
+# Show styled message
+show_random_style "Git'er Wizard"
 
-if [ "$#" -eq 0 ]; then
-    toilet -F gay "arg error!"
+# Display a fortune with Cowsay or fallback to plain fortune
+if command_exists fortune && command_exists cowsay; then
+    fortune | cowsay -f "${cowsaystyles[RANDOM % ${#cowsaystyles[@]}]}"
+elif command_exists fortune; then
+    fortune
+else
+    echo "No fortune available, skipping..."
+fi
 
-    # Ask for a commit message using Toilet with random formatting options or use provided argument
+# Commit message handling
+commitMessage=""
+if [ -n "$1" ]; then
+    commitMessage="$1"
+else
     echo "Enter your commit message:"
     read -r commitMessage
-    [ -z "$commitMessage" ] && commitMessage="$1"
-
-else
-
-    # Ask the user for a commit message
-    select option in "Use provided argument" "Set a new message" "Exit"; do
-        case $option in
-        "Use provided argument")
-            commitMessage="$1"
-            break
-            ;;
-        "Set a new message")
-            echo "Enter your commit message:"
-            read -r commitMessage
-            break
-            ;;
-        "Exit")
-            toilet -f gay "No commit message provided. Exiting..."
-            exit 1
-            ;;
-        *) echo "Invalid option. Please select again." ;;
-        esac
-    done
 fi
 
-# Commit changes and push to Git if a commit message is provided
 if [ -z "$commitMessage" ]; then
     echo "No commit message provided. Exiting..."
-else
-    git add .
-    git commit -m "$commitMessage"
+    exit 1
+fi
+
+# Git operations
+git add .
+git commit -m "$commitMessage"
+
+echo "Would you like to push the changes now? (y/n)"
+read -r pushConfirm
+if [[ "$pushConfirm" =~ ^[Yy]$ ]]; then
     git push
+else
+    echo "Changes committed locally. Push skipped."
 fi
